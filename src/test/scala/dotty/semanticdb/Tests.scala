@@ -16,6 +16,8 @@ import dotty.semanticdb.Scala._
 import dotty.tools.dotc.util.SourceFile
 import scala.math._
 
+import java.net.URI
+
 class Tests {
 
   def distance(r1: s.Range, sourceFile: SourceFile)(r2: s.Range): Int = {
@@ -107,22 +109,22 @@ class Tests {
 
   final def tastyClassDirectory = {
     val root = "out"
-    val files = Paths.get(root).toFile().listFiles
+    val files = Paths.get(root, Array[String]():_*).toFile().listFiles.nn // REVIEW: fix null
     val scalaFolderReg = """scala-(\d+)\.(\d+)""".r
-    val (_, _, path) = files
+    val (_, _, path:String) = files
       .collect(file =>
-        file.getName match {
-          case scalaFolderReg(major, minor) => (major, minor, file.getName)
+        file.nn.getName.nn match {
+          case scalaFolderReg(major, minor) => (major, minor, file.nn.getName.nn)
       })
       .max
-    Paths.get(root, path, "test-classes")
+    Paths.get(root, Array[String](path, "test-classes"):_*).nn
   }
 
-  val sourceroot = Paths.get("input").toAbsolutePath
+  val sourceroot = Paths.get(URI.create("input")).toAbsolutePath.nn
   val sourceDirectory = sourceroot.resolve("src/main/scala")
   val semanticdbClassDirectory = sourceroot.resolve("target/scala-2.12/classes")
   val semanticdbLoader =
-    new Semanticdbs.Loader(sourceroot, List(semanticdbClassDirectory))
+    new Semanticdbs.Loader(sourceroot.nn, List(semanticdbClassDirectory.nn))
 
   /** Returns the SemanticDB for this Scala source file. */
   def getScalacSemanticdb(scalaFile: Path): s.TextDocument = {
@@ -143,7 +145,7 @@ class Tests {
 
   /** Fails the test if the s.TextDocument from tasty and semanticdb-scalac are not the same. */
   def checkFile(filename: String): Unit = {
-    val path = sourceDirectory.resolve(filename)
+    val path = sourceDirectory.resolve(filename).nn
     val scalac = getScalacSemanticdb(path)
     val tasty = getTastySemanticdb(tastyClassDirectory, path)
     val obtained = Semanticdbs.printTextDocument(tasty)
@@ -156,7 +158,7 @@ class Tests {
   def assertNoDiff(obtained: String, expected: String): Unit = {
     if (obtained.isEmpty && !expected.isEmpty) fail("obtained empty output")
     def splitLines(string: String): java.util.List[String] =
-      string.trim.replace("\r\n", "\n").split("\n").toSeq.asJava
+      string.trim.replace("\r\n", "\n").split("\n").nn.map(_.nn).toSeq.asJava
     val obtainedLines = splitLines(obtained)
     val b = splitLines(expected)
     val patch = difflib.DiffUtils.diff(obtainedLines, b)
@@ -170,7 +172,7 @@ class Tests {
             obtainedLines,
             patch,
             1
-          )
+          ).nn
           .asScala
           .mkString("\n")
       }

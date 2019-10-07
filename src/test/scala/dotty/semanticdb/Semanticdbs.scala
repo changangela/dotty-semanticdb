@@ -17,16 +17,16 @@ object Semanticdbs {
    *                  if you only care about reading SemanticDB files from a single project.
    */
   class Loader(sourceroot: Path, classpath: List[Path]) {
-    private val META_INF = Paths.get("META-INF", "semanticdb").resolve(buildSubFolder)
+    private val META_INF = Paths.get("META-INF", Array("semanticdb"):_*).resolve(buildSubFolder)
     private val classLoader = new java.net.URLClassLoader(classpath.map(_.toUri.toURL).toArray)
     /** Returns a SemanticDB for a single Scala source file, if any. The path must be absolute. */
     def resolve(scalaAbsolutePath: Path): Option[s.TextDocument] = {
-      val scalaRelativePath = sourceroot.relativize(scalaAbsolutePath)
+      val scalaRelativePath = sourceroot.relativize(scalaAbsolutePath).nn
       val filename = scalaRelativePath.getFileName.toString
-      val semanticdbRelativePath = scalaRelativePath.resolveSibling(filename + ".semanticdb")
+      val semanticdbRelativePath = scalaRelativePath.resolveSibling(filename + ".semanticdb").nn
       val metaInfPath = META_INF.resolve(semanticdbRelativePath).toString
       Option(classLoader.findResource(metaInfPath)).map { url =>
-        val semanticdbAbsolutePath = Paths.get(url.toURI)
+        val semanticdbAbsolutePath = Paths.get(url.nn.toURI).nn
         Semanticdbs.loadTextDocument(scalaAbsolutePath, scalaRelativePath, semanticdbAbsolutePath)
       }
     }
@@ -43,7 +43,7 @@ object Semanticdbs {
       scalaRelativePath: Path,
       semanticdbAbsolutePath: Path
   ): s.TextDocument = {
-    val reluri = buildSubFolder + scalaRelativePath.iterator.asScala.mkString("/")
+    val reluri = buildSubFolder + scalaRelativePath.iterator.nn.asScala.mkString("/")
     val sdocs = parseTextDocuments(semanticdbAbsolutePath)
     sdocs.documents.find(_.uri == reluri) match {
       case None => throw new NoSuchElementException(reluri)
@@ -63,7 +63,7 @@ object Semanticdbs {
   /** Parses SemanticDB text documents from an absolute path to a `*.semanticdb` file. */
   def parseTextDocuments(path: Path): s.TextDocuments = {
     // NOTE: a *.semanticdb file is of type s.TextDocuments, not s.TextDocument
-    val in = Files.newInputStream(path)
+    val in = Files.newInputStream(path, null).nn // REVIEW: fix this null
     try s.TextDocuments.parseFrom(in)
     finally in.close()
   }

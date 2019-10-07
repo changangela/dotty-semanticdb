@@ -5,7 +5,7 @@ import scala.math._
 import dotty.tools.dotc.util.SourceFile
 
 class SourceFile(path: java.nio.file.Path) {
-  private val sourceCode = Source.fromFile(path.toFile).mkString
+  private val sourceCode = Source.fromFile(path.toFile.nn).mkString
   private val sourceFile = SourceFile.virtual(path.toString, sourceCode)
 
   def content() = sourceCode
@@ -15,7 +15,7 @@ class SourceFile(path: java.nio.file.Path) {
   def lineToOffset(offset: Int): Int = sourceFile.lineToOffset(offset)
 
   def peek(start: Int, end: Int) : String =
-    sourceCode.substring(max(start, 0), min(end, sourceCode.length - 1))
+    sourceCode.substring(max(start, 0), min(end, sourceCode.length - 1)).nn
 
   def firstOccurrenceLetter(letter: Char, start : Int) : Int = {
     var pos = start

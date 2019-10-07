@@ -7,12 +7,12 @@ import java.security.MessageDigest
 object MD5 {
   /** Returns the MD5 finger print for this string */
   def compute(string: String): String = {
-    compute(ByteBuffer.wrap(string.getBytes(StandardCharsets.UTF_8)))
+    compute(ByteBuffer.wrap(string.getBytes(StandardCharsets.UTF_8)).nn)
   }
   def compute(buffer: ByteBuffer): String = {
     val md = MessageDigest.getInstance("MD5")
     md.update(buffer)
-    bytesToHex(md.digest())
+    bytesToHex(md.digest().nn)
   }
   private val hexArray = "0123456789ABCDEF".toCharArray
   private def bytesToHex(bytes: Array[Byte]): String = {
