@@ -47,7 +47,7 @@ object Main {
       if (cleanedArgs.contains("help") || !cleanedArgs.contains("input")) {
         None
       } else {
-        cleanedArgs += "classpath" -> cleanedArgs.getOrElse("classpath", Files.createTempDirectory("semanticdb", null).toString) // REVIEW: added ,null for params
+        cleanedArgs += "classpath" -> cleanedArgs.getOrElse("classpath", Files.createTempDirectory("semanticdb").toString) // REVIEW: added ,null for params
         val tempFolder = new File(cleanedArgs("classpath"));
         if (!tempFolder.exists()){
             tempFolder.mkdir();
@@ -87,12 +87,12 @@ object Main {
           println("Compile error:")
           println(reporter)
         } else {
-          val scalaFile = Paths.get(URI.create(cliArgs("input"))).toAbsolutePath
-          val classNames = Utils.getClassNames(Paths.get(URI.create(cliArgs("classpath")).nn).nn, scalaFile.nn)
+          val scalaFile = Paths.get(cliArgs("input")).toAbsolutePath
+          val classNames = Utils.getClassNames(Paths.get(cliArgs("classpath")).nn, scalaFile.nn)
           val sdbconsumer = new SemanticdbConsumer(scalaFile.nn)
           val _ = ConsumeTasty(cliArgs("classpath"), classNames, sdbconsumer)
           val textDocument = sdbconsumer.toSemanticdb().nn
-          val os = Files.newOutputStream(Paths.get(URI.create(cliArgs("out"))), null).nn // TODO: bad fix
+          val os = Files.newOutputStream(Paths.get(cliArgs("out"))).nn // TODO: bad fix
           try textDocument.writeTo(os)
           finally os.close()
         }

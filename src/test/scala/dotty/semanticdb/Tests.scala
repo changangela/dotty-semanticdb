@@ -109,7 +109,7 @@ class Tests {
 
   final def tastyClassDirectory = {
     val root = "out"
-    val files = Paths.get(root, Array[String]():_*).toFile().listFiles.nn // REVIEW: fix null
+    val files = Paths.get(root).toFile().listFiles.nn // REVIEW: fix null
     val scalaFolderReg = """scala-(\d+)\.(\d+)""".r
     val (_, _, path:String) = files
       .collect(file =>
@@ -117,10 +117,10 @@ class Tests {
           case scalaFolderReg(major, minor) => (major, minor, file.nn.getName.nn)
       })
       .max
-    Paths.get(root, Array[String](path, "test-classes"):_*).nn
+    Paths.get(root, path, "test-classes").nn
   }
 
-  val sourceroot = Paths.get(URI.create("input")).toAbsolutePath.nn
+  val sourceroot = Paths.get("input").toAbsolutePath.nn
   val sourceDirectory = sourceroot.resolve("src/main/scala")
   val semanticdbClassDirectory = sourceroot.resolve("target/scala-2.12/classes")
   val semanticdbLoader =
