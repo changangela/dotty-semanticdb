@@ -55,11 +55,11 @@ object Scala {
         val buf = List.newBuilder[String]
         def loop(begin: Int, i: Int): Unit =
           if (i >= symbol.length) {
-            buf += symbol.substring(begin, symbol.length).nn
+            buf += symbol.substring(begin, symbol.length)
           } else {
             symbol.charAt(i) match {
               case ';' =>
-                buf += symbol.substring(begin, i).nn
+                buf += symbol.substring(begin, i)
                 loop(i + 1, i + 1)
               case '`' =>
                 var j = i + 1
@@ -226,12 +226,12 @@ object Scala {
         val end = i
         while (readChar() != '`') {}
         readChar()
-        s.substring(i + 2, end).nn
+        s.substring(i + 2, end)
       } else {
         val end = i + 1
         if (!Character.isJavaIdentifierPart(currChar)) fail()
         while (Character.isJavaIdentifierPart(readChar()) && currChar != BOF) {}
-        s.substring(i + 1, end).nn
+        s.substring(i + 1, end)
       }
     }
 
@@ -240,7 +240,7 @@ object Scala {
       if (currChar != ')') fail()
       while (readChar() != '(') {}
       readChar()
-      s.substring(i + 1, end).nn
+      s.substring(i + 1, end)
     }
 
     def parseDescriptor(): Descriptor = {
@@ -279,7 +279,7 @@ object Scala {
     def entryPoint(): (Descriptor, String) = {
       readChar()
       val desc = parseDescriptor()
-      (desc, s.substring(0, i + 1).nn)
+      (desc, s.substring(0, i + 1))
     }
   }
 

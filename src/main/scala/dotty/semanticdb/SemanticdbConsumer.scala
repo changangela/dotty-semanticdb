@@ -128,7 +128,7 @@ class SemanticdbConsumer(sourceFilePath: java.nio.file.Path) extends TastyConsum
         def trueName: String = {
           val prohibitedChars = '.' :: ';' :: '[' :: '/' :: '<' :: '>' :: Nil
           prohibitedChars.foldLeft(symbol.name)((old, chr) =>
-            old.replaceAll("\\$u%04X".format(chr.toInt), chr.toString).nn
+            old.replaceAll("\\$u%04X".format(chr.toInt), chr.toString)
           )
         }
 

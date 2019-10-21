@@ -15,7 +15,7 @@ class SourceFile(path: java.nio.file.Path) {
   def lineToOffset(offset: Int): Int = sourceFile.lineToOffset(offset)
 
   def peek(start: Int, end: Int) : String =
-    sourceCode.substring(max(start, 0), min(end, sourceCode.length - 1)).nn
+    sourceCode.substring(max(start, 0), min(end, sourceCode.length - 1))
 
   def firstOccurrenceLetter(letter: Char, start : Int) : Int = {
     var pos = start

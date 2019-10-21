@@ -12,7 +12,7 @@ object MD5 {
   def compute(buffer: ByteBuffer): String = {
     val md = MessageDigest.getInstance("MD5")
     md.update(buffer)
-    bytesToHex(md.digest().nn)
+    bytesToHex(md.digest())
   }
   private val hexArray = "0123456789ABCDEF".toCharArray
   private def bytesToHex(bytes: Array[Byte]): String = {

@@ -16,8 +16,6 @@ import dotty.semanticdb.Scala._
 import dotty.tools.dotc.util.SourceFile
 import scala.math._
 
-import java.net.URI
-
 class Tests {
 
   def distance(r1: s.Range, sourceFile: SourceFile)(r2: s.Range): Int = {
@@ -113,8 +111,8 @@ class Tests {
     val scalaFolderReg = """scala-(\d+)\.(\d+)""".r
     val (_, _, path:String) = files
       .collect(file =>
-        file.nn.getName.nn match {
-          case scalaFolderReg(major, minor) => (major, minor, file.nn.getName.nn)
+        file.nn.getName match {
+          case scalaFolderReg(major, minor) => (major, minor, file.nn.getName)
       })
       .max
     Paths.get(root, path, "test-classes").nn

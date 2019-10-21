@@ -63,7 +63,7 @@ object Semanticdbs {
   /** Parses SemanticDB text documents from an absolute path to a `*.semanticdb` file. */
   def parseTextDocuments(path: Path): s.TextDocuments = {
     // NOTE: a *.semanticdb file is of type s.TextDocuments, not s.TextDocument
-    val in = Files.newInputStream(path).nn // REVIEW: fix this null
+    val in = Files.newInputStream(path).nn
     try s.TextDocuments.parseFrom(in)
     finally in.close()
   }
