@@ -10,7 +10,7 @@ lazy val root = project
     scalaVersion := dottyVersion,
 
     unmanagedSourceDirectories in Test += baseDirectory.value / "input" / "src" / "main" / "scala",
-    scalacOptions in Compile ++= Seq("-noindent", "-Yexplicit-nulls"),
+    scalacOptions in Compile ++= Seq("-noindent", "-Yexplicit-nulls", "-Yjava-interop-dont-nullify-outermost"),
     scalacOptions in Test ++= Seq("-noindent", "-Yno-inline"),
     libraryDependencies ++= Seq(
       "com.novocode" % "junit-interface" % "0.11" % "test",
