@@ -18,7 +18,7 @@ object Semanticdbs {
    */
   class Loader(sourceroot: Path, classpath: List[Path]) {
     private val META_INF = Paths.get("META-INF", "semanticdb").resolve(buildSubFolder)
-    private val classLoader = new java.net.URLClassLoader(classpath.map(_.toUri.toURL).toArray)
+    private val classLoader = new java.net.URLClassLoader(classpath.map(_.toUri.toURL).toArray[java.net.URL | JavaNull])
     /** Returns a SemanticDB for a single Scala source file, if any. The path must be absolute. */
     def resolve(scalaAbsolutePath: Path): Option[s.TextDocument] = {
       val scalaRelativePath = sourceroot.relativize(scalaAbsolutePath)

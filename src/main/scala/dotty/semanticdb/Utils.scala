@@ -28,7 +28,7 @@ object Utils {
   /** List all tasty files occuring in the folder f or one of its subfolders */
   def recursiveListFiles(f: File, prefix : String = ""): Array[File] = {
     val pattern = (".*" + prefix + ".*\\.tasty").r
-    val files = f.listFiles
+    val files = f.listFiles.map(_.nn)
     val folders = files.filter(_.isDirectory)
     val tastyfiles = files.filter(_.toPath.toString match {
       case pattern(x: _*) => true

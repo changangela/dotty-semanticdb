@@ -19,12 +19,12 @@ class Methods[T] {
   def m7b[U <: T](l: List[U]) = ???
   def `m8().`() = ???
   class `m9().`
-  def m9(x: `m9().`) = ???
-  def m10(x: AList[T]) = ???
+  def m9(x: `m9().`|Null) = ???
+  def m10(x: AList[T]|Null) = ???
   def m11(x: Predef.type) = ???
   def m11(x: OExample.type) = ???
-  def m12a(x: {}) = ???
-  def m12b(x: { val x: Int }) = ???
+  def m12a(x: {}|Null) = ???
+  def m12b(x: { val x: Int }|Null) = ???
   def m13(x: Int @unchecked) = ???
   def m15(x: => Int) = ???
   def m16(x: Int*) = ???

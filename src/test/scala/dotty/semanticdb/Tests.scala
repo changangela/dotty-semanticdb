@@ -111,8 +111,8 @@ class Tests {
     val scalaFolderReg = """scala-(\d+)\.(\d+)""".r
     val (_, _, path) = files
       .collect(file =>
-        file.getName match {
-          case scalaFolderReg(major, minor) => (major, minor, file.getName)
+        file.nn.getName match {
+          case scalaFolderReg(major, minor) => (major, minor, file.nn.getName)
       })
       .max
     Paths.get(root, path, "test-classes")
@@ -156,7 +156,7 @@ class Tests {
   def assertNoDiff(obtained: String, expected: String): Unit = {
     if (obtained.isEmpty && !expected.isEmpty) fail("obtained empty output")
     def splitLines(string: String): java.util.List[String] =
-      string.trim.replace("\r\n", "\n").split("\n").toSeq.asJava
+      string.trim.replace("\r\n", "\n").split("\n").map(_.nn).toSeq.asJava
     val obtainedLines = splitLines(obtained)
     val b = splitLines(expected)
     val patch = difflib.DiffUtils.diff(obtainedLines, b)
