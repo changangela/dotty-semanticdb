@@ -8,7 +8,6 @@ import dotty.tools.dotc.reporting.Reporter
 
 import java.io.File
 import java.nio.file._
-import java.net.URI
 
 object Main {
   val userHome = System.getProperty("user.home")
@@ -47,7 +46,7 @@ object Main {
       if (cleanedArgs.contains("help") || !cleanedArgs.contains("input")) {
         None
       } else {
-        cleanedArgs += "classpath" -> cleanedArgs.getOrElse("classpath", Files.createTempDirectory("semanticdb").toString) // REVIEW: added ,null for params
+        cleanedArgs += "classpath" -> cleanedArgs.getOrElse("classpath", Files.createTempDirectory("semanticdb").toString)
         val tempFolder = new File(cleanedArgs("classpath"));
         if (!tempFolder.exists()){
             tempFolder.mkdir();
@@ -88,11 +87,11 @@ object Main {
           println(reporter)
         } else {
           val scalaFile = Paths.get(cliArgs("input")).toAbsolutePath
-          val classNames = Utils.getClassNames(Paths.get(cliArgs("classpath")).nn, scalaFile.nn)
-          val sdbconsumer = new SemanticdbConsumer(scalaFile.nn)
+          val classNames = Utils.getClassNames(Paths.get(cliArgs("classpath")), scalaFile)
+          val sdbconsumer = new SemanticdbConsumer(scalaFile)
           val _ = ConsumeTasty(cliArgs("classpath"), classNames, sdbconsumer)
-          val textDocument = sdbconsumer.toSemanticdb().nn
-          val os = Files.newOutputStream(Paths.get(cliArgs("out"))).nn // TODO: bad fix
+          val textDocument = sdbconsumer.toSemanticdb()
+          val os = Files.newOutputStream(Paths.get(cliArgs("out")))
           try textDocument.writeTo(os)
           finally os.close()
         }

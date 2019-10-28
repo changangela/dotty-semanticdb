@@ -28,21 +28,21 @@ object Utils {
   /** List all tasty files occuring in the folder f or one of its subfolders */
   def recursiveListFiles(f: File, prefix : String = ""): Array[File] = {
     val pattern = (".*" + prefix + ".*\\.tasty").r
-    val files = f.listFiles.nn.map(_.nn).nn
+    val files = f.listFiles.map(_.nn)
     val folders = files.filter(_.isDirectory)
     val tastyfiles = files.filter(_.toPath.toString match {
       case pattern(x: _*) => true
       case _              => false
     })
-    tastyfiles ++ folders.nn.flatMap(recursiveListFiles(_, prefix))
+    tastyfiles ++ folders.flatMap(recursiveListFiles(_, prefix))
   }
 
   /** Returns a mapping from *.scala file to a list of tasty files. */
   def getTastyFiles(classPath: Path, prefix : String = ""): HashMap[String, List[Path]] = {
     val sourceToTasty: HashMap[String, List[Path]] = HashMap()
-    val tastyfiles = recursiveListFiles(classPath.toFile().nn, prefix).map(_.nn)
+    val tastyfiles = recursiveListFiles(classPath.toFile(), prefix)
     tastyfiles.map(tastyPath => {
-      val (classpath, classname) = getClasspathClassname(tastyPath.toPath().nn)
+      val (classpath, classname) = getClasspathClassname(tastyPath.toPath())
       // We add an exception here to avoid crashing if we encountered
       // a bad tasty file
       try {
@@ -52,7 +52,7 @@ object Utils {
           source =>
             sourceToTasty +=
               (source -> (tastyPath
-                .toPath().toAbsolutePath.nn :: sourceToTasty.getOrElse(source, Nil).nn).nn))
+                .toPath().toAbsolutePath :: sourceToTasty.getOrElse(source, Nil))))
       } catch {
         case _: InvocationTargetException => ()
       }
@@ -65,7 +65,7 @@ object Utils {
   extracted from the compilation artifacts found in [classPath].
   */
   def getClassNames(classPath: Path, scalaFile: Path, prefix : String = ""): List[String] = {
-    val tastyFiles = getTastyFiles(classPath.toAbsolutePath.nn, prefix)
+    val tastyFiles = getTastyFiles(classPath.toAbsolutePath, prefix)
     getClassNamesCached(scalaFile, tastyFiles)
   }
 

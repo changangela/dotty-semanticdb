@@ -107,22 +107,22 @@ class Tests {
 
   final def tastyClassDirectory = {
     val root = "out"
-    val files = Paths.get(root).toFile().listFiles.nn // REVIEW: fix null
+    val files = Paths.get(root).toFile().listFiles
     val scalaFolderReg = """scala-(\d+)\.(\d+)""".r
-    val (_, _, path:String) = files
+    val (_, _, path) = files
       .collect(file =>
         file.nn.getName match {
           case scalaFolderReg(major, minor) => (major, minor, file.nn.getName)
       })
       .max
-    Paths.get(root, path, "test-classes").nn
+    Paths.get(root, path, "test-classes")
   }
 
-  val sourceroot = Paths.get("input").toAbsolutePath.nn
+  val sourceroot = Paths.get("input").toAbsolutePath
   val sourceDirectory = sourceroot.resolve("src/main/scala")
   val semanticdbClassDirectory = sourceroot.resolve("target/scala-2.12/classes")
   val semanticdbLoader =
-    new Semanticdbs.Loader(sourceroot.nn, List(semanticdbClassDirectory.nn))
+    new Semanticdbs.Loader(sourceroot, List(semanticdbClassDirectory))
 
   /** Returns the SemanticDB for this Scala source file. */
   def getScalacSemanticdb(scalaFile: Path): s.TextDocument = {
@@ -143,7 +143,7 @@ class Tests {
 
   /** Fails the test if the s.TextDocument from tasty and semanticdb-scalac are not the same. */
   def checkFile(filename: String): Unit = {
-    val path = sourceDirectory.resolve(filename).nn
+    val path = sourceDirectory.resolve(filename)
     val scalac = getScalacSemanticdb(path)
     val tasty = getTastySemanticdb(tastyClassDirectory, path)
     val obtained = Semanticdbs.printTextDocument(tasty)
@@ -156,7 +156,7 @@ class Tests {
   def assertNoDiff(obtained: String, expected: String): Unit = {
     if (obtained.isEmpty && !expected.isEmpty) fail("obtained empty output")
     def splitLines(string: String): java.util.List[String] =
-      string.trim.replace("\r\n", "\n").split("\n").nn.map(_.nn).toSeq.asJava
+      string.trim.replace("\r\n", "\n").split("\n").map(_.nn).toSeq.asJava
     val obtainedLines = splitLines(obtained)
     val b = splitLines(expected)
     val patch = difflib.DiffUtils.diff(obtainedLines, b)
@@ -170,7 +170,7 @@ class Tests {
             obtainedLines,
             patch,
             1
-          ).nn
+          )
           .asScala
           .mkString("\n")
       }

@@ -5,7 +5,7 @@ import scala.math._
 import dotty.tools.dotc.util.SourceFile
 
 class SourceFile(path: java.nio.file.Path) {
-  private val sourceCode = Source.fromFile(path.toFile.nn).mkString
+  private val sourceCode = Source.fromFile(path.toFile).mkString
   private val sourceFile = SourceFile.virtual(path.toString, sourceCode)
 
   def content() = sourceCode

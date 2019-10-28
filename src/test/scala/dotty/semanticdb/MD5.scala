@@ -7,7 +7,7 @@ import java.security.MessageDigest
 object MD5 {
   /** Returns the MD5 finger print for this string */
   def compute(string: String): String = {
-    compute(ByteBuffer.wrap(string.getBytes(StandardCharsets.UTF_8)).nn)
+    compute(ByteBuffer.wrap(string.getBytes(StandardCharsets.UTF_8)))
   }
   def compute(buffer: ByteBuffer): String = {
     val md = MessageDigest.getInstance("MD5")
